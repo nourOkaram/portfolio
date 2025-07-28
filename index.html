@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nour Karam | Lead Gameplay & Graphics Engineer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto+Mono:wght@400;500&display=swap');
+
+        :root {
+            --primary-color: #50fa7b;
+            --secondary-color: #f8f8f2;
+            --background-color: #282a36;
+            --surface-color: #44475a;
+            --text-color: #c8d8f8;
+            --heading-color: var(--secondary-color);
+            --accent-color: #bd93f9;
+            --border-color: rgba(80, 250, 123, 0.3);
+            --shadow-color: rgba(80, 250, 123, 0.2);
+            --transition: all 0.3s ease-in-out;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(80, 250, 123, 0.1), transparent 40%);
+            z-index: -1;
+            transition: background 0.2s linear;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--heading-color);
+            font-weight: 900;
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 60px;
+            text-shadow: 0 0 15px var(--shadow-color);
+        }
+
+        section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .glass-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 40px;
+            transition: var(--transition);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+
+        #cover {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+        #cover-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        #cover .content {
+            z-index: 1;
+        }
+        #cover h1 {
+            font-size: 5rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #cover p {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+
+        #about .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 50px;
+            align-items: center;
+        }
+        .profile-image-container {
+            position: relative;
+        }
+        .profile-image-container::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            border-radius: 15px;
+            z-index: -1;
+            transition: var(--transition);
+        }
+        .profile-image-container:hover::before {
+            transform: rotate(3deg);
+            filter: blur(5px);
+        }
+        .profile-image {
+            width: 100%;
+            border-radius: 15px;
+            display: block;
+        }
+        #about h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--heading-color);
+        }
+
+
+        #education .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        #education .timeline::after {
+            content: '';
+            position: absolute;
+            width: 3px;
+            background: var(--surface-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1.5px;
+        }
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+        }
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: var(--background-color);
+            border: 3px solid var(--primary-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .timeline-item.left { left: 0; text-align: right; }
+        .timeline-item.right { left: 50%; }
+        .timeline-item.right::after { left: -10px; }
+        .timeline-content {
+            padding: 20px 30px;
+            background: var(--surface-color);
+            border-radius: 10px;
+            position: relative;
+        }
+        .timeline-content h3 { font-size: 1.3rem; color: var(--heading-color); }
+        .timeline-content p { font-size: 0.9rem; }
+
+
+        #skills .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .skill-category { padding: 20px; }
+        .skill-category h3 {
+            border-bottom: 2px solid var(--primary-color);
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            color: var(--heading-color);
+        }
+        .skill-list { list-style: none; }
+        .skill-list li {
+            background: var(--surface-color);
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 3px solid var(--primary-color);
+            transition: var(--transition);
+        }
+        .skill-list li:hover {
+            transform: translateX(10px);
+            border-left-color: var(--accent-color);
+        }
+
+
+        #experience .experience-item {
+            margin-bottom: 30px;
+        }
+        #experience h3 { font-size: 1.5rem; color: var(--heading-color); }
+        #experience .company { color: var(--primary-color); font-weight: 500; }
+        #experience ul { padding-left: 20px; }
+
+        #services .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .service-card {
+            text-align: center;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px var(--shadow-color);
+        }
+        .service-card i { font-size: 2.5rem; color: var(--accent-color); margin-bottom: 15px; }
+        .service-card h3 { font-size: 1.3rem; color: var(--heading-color); }
+
+
+        .project-card {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+        .project-image-container {
+            grid-column: 1 / 8;
+            grid-row: 1 / -1;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .project-image-container::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-color);
+            opacity: 0.2;
+            transition: var(--transition);
+        }
+        .project-card:hover .project-image-container::before { opacity: 0; }
+        .project-card img { width: 100%; display: block; }
+        .project-description {
+            grid-column: 7 / -1;
+            grid-row: 1 / -1;
+            text-align: right;
+            z-index: 2;
+        }
+        .project-description h3 { font-size: 1.8rem; color: var(--heading-color); }
+        .project-description .description-box {
+            background: var(--surface-color);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+        }
+        .project-tech-list { list-style: none; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 15px; margin: 20px 0; font-size: 0.9rem; color: var(--primary-color); }
+        .project-links a { margin-left: 15px; font-size: 1.5rem; color: var(--text-color); }
+        .project-links a:hover { color: var(--primary-color); }
+
+
+        .project-card:nth-of-type(even) .project-image-container { grid-column: 6 / -1; }
+        .project-card:nth-of-type(even) .project-description { grid-column: 1 / 7; text-align: left; }
+        .project-card:nth-of-type(even) .project-tech-list { justify-content: flex-start; }
+        .project-card:nth-of-type(even) .project-links a { margin-left: 0; margin-right: 15px; }
+
+
+        #achievements .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        #achievements .glass-card h3 { color: var(--heading-color); }
+
+
+        #testimonials .testimonial-item {
+            border-left: 4px solid var(--primary-color);
+            margin-bottom: 20px;
+        }
+        #testimonials .author { font-weight: 700; color: var(--heading-color); display: block; margin-top: 15px; }
+
+
+        #contact { text-align: center; }
+        #contact h2 { font-size: 3.5rem; color: var(--heading-color); }
+        #contact p { max-width: 600px; margin: 0 auto 40px; }
+        #contact .contact-button {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-family: 'Roboto Mono', monospace;
+            transition: var(--transition);
+        }
+        #contact .contact-button:hover {
+            background: var(--primary-color);
+            color: var(--background-color);
+            box-shadow: 0 0 20px var(--shadow-color);
+        }
+
+        footer { text-align: center; padding: 40px; background-color: var(--surface-color); }
+        .social-links a { margin: 0 15px; font-size: 1.5rem; color: var(--text-color); }
+        .social-links a:hover { color: var(--primary-color); }
+
+
+        @media (max-width: 768px) {
+            h1 { font-size: 3rem !important; }
+            h2 { font-size: 2.2rem !important; }
+            #about .container { grid-template-columns: 1fr; text-align: center; }
+            .profile-image-container { max-width: 300px; margin: 0 auto 40px; }
+            #education .timeline::after { left: 10px; }
+            .timeline-item { width: 100%; padding-left: 50px; padding-right: 10px; text-align: left !important; }
+            .timeline-item.right { left: 0%; }
+            .timeline-item::after { left: 1px; }
+            .project-card, .project-card:nth-of-type(even) { display: flex; flex-direction: column; }
+            .project-image-container, .project-card:nth-of-type(even) .project-image-container { order: 1; }
+            .project-description, .project-card:nth-of-type(even) .project-description { order: 2; text-align: left; padding: 20px 0; }
+            .project-description .description-box { background: none; padding: 0; box-shadow: none; }
+            .project-tech-list, .project-card:nth-of-type(even) .project-tech-list { justify-content: flex-start; }
+            .project-links a, .project-card:nth-of-type(even) .project-links a { margin: 0 15px 0 0; }
+        }
+
+        .animated-element {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .animated-element.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+<body>
+<section id="cover">
+    <canvas id="cover-canvas"></canvas>
+    <div class="content">
+        <h1>Nour Karam</h1>
+        <p>Lead Gameplay & Graphics Engineer</p>
+    </div>
+</section>
+
+<main>
+    <section id="about" class="animated-element">
+        <div class="container">
+            <div class="profile-image-container">
+                <img src="https://www.workitdaily.com/media-library/professional-man-creating-an-outstanding-personal-branding-statement.jpg?id=22025730&width=1200&height=800&quality=85&coordinates=77%2C0%2C77%2C0" alt="A personal photo of Nour Karam" class="profile-image">
+            </div>
+            <div>
+                <h3>My Mission: Architecting Digital Worlds</h3>
+                <p>My journey began not just with playing games, but with deconstructing them. I was driven by a need to understand the underlying systems that created such immersive experiences. This curiosity led me to master the core of game creation: the intricate dance between high-performance graphics programming and compelling gameplay engineering.</p>
+                <p>I specialize in building robust, scalable, and highly optimized systems for AAA and ambitious indie titles. Whether it's architecting a custom rendering pipeline in OpenGL, developing complex AI behaviors in Unreal, or fine-tuning performance to the last millisecond, my focus is on technical excellence that directly serves the player experience.</p>
+                <p>The ultimate value I provide is transforming a creative vision into a tangible, high-quality, and performant digital reality.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="education" class="animated-element">
+        <div class="container">
+            <h2>Academic & Professional Milestones</h2>
+            <div class="timeline">
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <h3>B.Sc in Computer Science (In Progress)</h3>
+                        <p>Currently pursuing my degree, with a deep focus on Real-Time Rendering and Simulation. My coursework and personal projects involve exploring advanced Physically-Based Rendering techniques.</p>
+                    </div>
+                </div>
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <h3>Unreal Engine 5 Certified Expert</h3>
+                        <p>Demonstrated top-tier expertise in UE5's core systems, including advanced gameplay mechanics and Niagara VFX.</p>
+                    </div>
+                </div>
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <h3>Advanced C++ for Game Development</h3>
+                        <p>Mastery of modern C++ features, data-oriented design, and low-level performance optimization.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="animated-element">
+        <div class="container">
+            <h2>Technical Arsenal</h2>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h3>Core Engines & APIs</h3>
+                    <ul class="skill-list">
+                        <li>Unreal Engine 5 (Expert)</li>
+                        <li>Unity (Professional)</li>
+                        <li>C++ (11/17/20)</li>
+                        <li>Modern OpenGL / Vulkan</li>
+                        <li>DirectX 12</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Graphics & Rendering</h3>
+                    <ul class="skill-list">
+                        <li>HLSL / GLSL Shaders</li>
+                        <li>Compute Shaders</li>
+                        <li>Rendering Pipeline Architecture</li>
+                        <li>Physically-Based Rendering (PBR)</li>
+                        <li>Performance Profiling & GPU Optimization</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Gameplay Systems</h3>
+                    <ul class="skill-list">
+                        <li>AI (Behavior Trees, State Machines)</li>
+                        <li>Multiplayer Networking (Replication)</li>
+                        <li>Physics & Collision Systems</li>
+                        <li>Gameplay Ability Systems</li>
+                        <li>UI/UX Engineering</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="animated-element">
+        <div class="container">
+            <h2>Career Engagements</h2>
+            <div class="glass-card experience-item">
+                <h3>Lead Gameplay Engineer</h3>
+                <p class="company">Quantum Leap Studios | 2020 - Present</p>
+                <ul>
+                    <li>Architected and led the implementation of core gameplay systems for an unannounced AAA sci-fi RPG.</li>
+                    <li>Designed and developed a modular AI framework, enabling designers to create complex enemy behaviors.</li>
+                    <li>Optimized game logic and memory usage, achieving a stable 60fps on target console hardware.</li>
+                </ul>
+            </div>
+            <div class="glass-card experience-item">
+                <h3>Graphics Programmer</h3>
+                <p class="company">Pixelated Dreams | 2018 - 2020</p>
+                <ul>
+                    <li>Developed custom shaders and post-processing effects for a stylized fantasy title.</li>
+                    <li>Implemented a custom lighting model in Unity's URP to achieve a unique art style.</li>
+                    <li>Worked closely with artists to create and optimize rendering features.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="animated-element">
+        <div class="container">
+            <h2>Areas of Expertise</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-cogs"></i>
+                    <h3>Gameplay Systems Architecture</h3>
+                    <p>Designing and building the core mechanics and logic for complex games.</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-palette"></i>
+                    <h3>Graphics Pipeline Engineering</h3>
+                    <p>Developing and optimizing rendering pipelines for unique visual styles and high performance.</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-rocket"></i>
+                    <h3>Engine & Tools Development</h3>
+                    <p>Creating custom tools and extending engine capabilities to empower creative teams.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="animated-element">
+        <div class="container">
+            <h2>Project Showcase</h2>
+
+            <div class="project-card">
+                <div class="project-image-container">
+                    <img src="https://images.deepai.org/chat-style-image/3c56e1ed283b411aaab7205200389e6e/output.jpg" alt="Project Odyssey">
+                </div>
+                <div class="project-description">
+                    <h3>Project "Odyssey"</h3>
+                    <div class="description-box">
+                        <p>A proof-of-concept for a large-scale space exploration game in UE5. My role involved architecting the procedural planet generation system and developing the 6-DOF flight physics model. The case study focused on optimizing real-time planetary rendering and ensuring stable physics at high velocities.</p>
+                    </div>
+                    <ul class="project-tech-list">
+                        <li>Unreal Engine 5</li><li>C++</li><li>Niagara</li><li>PCG</li>
+                    </ul>
+                    <div class="project-links">
+                        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image-container">
+                    <img src="https://images.deepai.org/art-image/c29d09b15e8940e2b30de0d2fd47cd99/custom-opengl-renderer-a-real-time-3d-renderer-built-.jpg" alt="Custom OpenGL Renderer">
+                </div>
+                <div class="project-description">
+                    <h3>Custom OpenGL Renderer</h3>
+                    <div class="description-box">
+                        <p>A real-time 3D renderer built entirely from scratch in C++ and OpenGL. It features a deferred rendering pipeline, PBR materials, and advanced post-processing effects. The primary challenge was implementing an efficient shadow mapping system for multiple dynamic lights.</p>
+                    </div>
+                    <ul class="project-tech-list">
+                        <li>C++</li><li>OpenGL</li><li>GLSL</li><li>CMake</li>
+                    </ul>
+                    <div class="project-links">
+                        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="achievements" class="animated-element">
+        <div class="container">
+            <h2>Recognition & Contributions</h2>
+            <div class="achievements-grid">
+                <div class="glass-card">
+                    <h3>Speaker at GDC 2024</h3>
+                    <p>Presented a technical talk on "Optimizing AI Decision-Making in Large-Scale Worlds".</p>
+                </div>
+                <div class="glass-card">
+                    <h3>Published Research</h3>
+                    <p>Co-authored a paper on real-time global illumination techniques for the Journal of Computer Graphics.</p>
+                </div>
+                <div class="glass-card">
+                    <h3>Technical Achievement Award</h3>
+                    <p>Winner at the Indie Game Festival for "Best Engine Technology" in a personal project.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="animated-element">
+        <div class="container">
+            <h2>What My Colleagues Say</h2>
+            <div class="glass-card testimonial-item">
+                <p>"Nour's ability to dive deep into the engine's source code to solve complex graphical problems is second to none. They are a rare talent who truly understands the art and science of rendering."</p>
+                <span class="author">- Alex Chen, Studio Technical Director</span>
+            </div>
+            <div class="glass-card testimonial-item">
+                <p>"When we needed a robust and scalable AI system, Nour didn't just deliver; they built a framework that our designers loved to use. Their work was a cornerstone of our project's success."</p>
+                <span class="author">- Jane Rodriguez, Lead Producer</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="animated-element">
+        <div class="container">
+            <h2>Let's Engineer the Future of Play.</h2>
+            <p>I am seeking to collaborate on ambitious, technically challenging projects that push the boundaries of interactive entertainment. If you have such a vision, let's connect.</p>
+            <a href="mailto:nour.karam.dev@example.com" class="contact-button">Get In Touch</a>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="social-links">
+        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+    </div>
+    <p>&copy; 2025 Nour Karam. All Rights Reserved.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('mousemove', e => {
+            document.body.style.setProperty('--mouse-x', e.clientX + 'px');
+            document.body.style.setProperty('--mouse-y', e.clientY + 'px');
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.animated-element').forEach(el => observer.observe(el));
+
+
+        const canvas = document.getElementById('cover-canvas');
+        if(canvas) {
+            try {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+
+                const particlesCount = 5000;
+                const positions = new Float32Array(particlesCount * 3);
+                for (let i = 0; i < particlesCount * 3; i++) {
+                    positions[i] = (Math.random() - 0.5) * 10;
+                }
+                const particlesGeometry = new THREE.BufferGeometry();
+                particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+                const particlesMaterial = new THREE.PointsMaterial({
+                    size: 0.02,
+                    color: new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim()),
+                    transparent: true,
+                    blending: THREE.AdditiveBlending
+                });
+                const particleSystem = new THREE.Points(particlesGeometry, particlesMaterial);
+                scene.add(particleSystem);
+
+                camera.position.z = 5;
+
+                let mouseX = 0, mouseY = 0;
+                document.addEventListener('mousemove', (event) => {
+                    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+                });
+
+                const clock = new THREE.Clock();
+                function animate() {
+                    requestAnimationFrame(animate);
+                    const elapsedTime = clock.getElapsedTime();
+                    particleSystem.rotation.y = elapsedTime * 0.05;
+                    camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
+                    camera.position.y += (mouseY * 0.5 - camera.position.y) * 0.05;
+                    camera.lookAt(scene.position);
+                    renderer.render(scene, camera);
+                }
+                animate();
+
+                window.addEventListener('resize', () => {
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                });
+            } catch (e) {
+                console.error("Three.js initialization failed:", e);
+                canvas.style.display = 'none';
+            }
+        }
+    });
+</script>
+</body>
+</html>
